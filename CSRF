@@ -1,0 +1,86 @@
+# Understanding CSRF
+
+## What is CSRF?
+Cross-Site Request Forgery (CSRF) is an attack where a victim is tricked into performing unintended actions.
+
+## Impact
+- Change email or password
+- Transfer funds
+- Modify permissions
+
+## Conditions for CSRF
+1. **Relevant action** – There must be a valuable action the attacker can exploit .
+2. **Cookie-based session** – The application relies solely on cookies to identify the user.
+3. **Predictable request** – No secret values required.
+
+## Practical Learning
+Try free labs at [PortSwigger](https://portswigger.net/web-security/csrf) to practice:
+
+  ## CSRF Tokens Bypass
+  
+- Lab 1: CSRF vulnerability with no defenses : Solved change the mail           
+- Lab 2 : CSRF where token validation depends on request method  : Solved change Post to GET method 
+- Lab 3 : CSRF where token validation depends on token being present : Solved Remove csrf token and check and try to change request method.
+- Lab 4 : CSRF where token is not tied to user session : Solved we need to put the account (B attacker) csrf token to account (A victim) to modify this will work. In this case the server store the bucket of valid crsf tokens.
+- Lab 5 : CSRF where token is tied to non-session cookie : 
+          case 1: check if the CSRF token is tied to CSRF cookie : 
+                    - Replace user B csrf token to user A csrf token if we get 200ok they are not tied if invalid crsf token reponse they are tied.
+                    - sumbit invalid csrf token 
+            case 2: submit the valid CSRF token and csrf cookie key of the another user but keep session id of user A only OK!  this will work 
+              - The server only checked that the CSRF token matched the csrfKey — and it did, because they were paired correctly.
+              - But the server did not enforce that the csrfKey belonged to the same session as the session cookie.
+
+    Here we got the hint : After the case 2 we get LastSearchTerm=hi in cookie header this is where we make the exploit
+
+  
+  bypass : In order to exploit this we need to perform 2 things
+          1. Inject a csrfKey cookie in the user's session (http header injection) - Done
+          2. Send a csrf attack to the victim a known csrf token.
+
+          * Note: In order to solve this lab use search functionality hit abc and enter intercept request and see the response
+                  in the header of response their is {{ Set-Cookie: LastSearchTerm=hi; Secure; HttpOnly }) Now modify the request
+                  like this {{ GET /?search=hi%0d%0aSet-Cookie:%20csrfkey:wFRVw4u7XcSg0NXjYwwq7vxnNE3FnN0D HTTP/2 }}
+          - %0d : carriage return url encoded characters
+          - %0a : new line
+          - %20 : space 
+          - In search parameter csrf-key is attacker once!
+                              check Response 200ok 
+          * make sure change email while exploiting
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## common defences against CSRF
+- CSRF tokens
+- SameSite Cookies
+- Referer-based validation
+
+
+## Bypass this common defences
+
+- changing the request method POST to GET some time they miss this validations and try removing the crsf token
+- key point some times the application will hold a large bucket of valid tokens if the session id is not tied with the crsf token we can we can manipulate the request.
+
+  
+
+  
+
+
+
+  
+
+
+
