@@ -43,9 +43,18 @@ Try free labs at [PortSwigger](https://portswigger.net/web-security/csrf) to pra
           - %0d : carriage return url encoded characters
           - %0a : new line
           - %20 : space 
-          - In search parameter csrf-key is attacker once!
-                              check Response 200ok 
-          * make sure change email while exploiting
+          - In search parameter csrf-key is attacker once! and change the csrf token also  both must be attacker and only the session id is victim account.check Response 200ok 
+          - make sure change email while exploiting
+
+    Guys this lab take me lot more time so please : understand the above written concept and follow this like "https://youtu.be/XE67ooy53jU?si=4j6jf1jf43pmhVlq"
+
+  - Lab 6 : CSRF where token is duplicated in cookie : To solve this lab make sure csrf token both in body and header are same
+                                      - search parameter is vulnerable to set the cookie    
+                              GET /?search=hat%0d%0aSet-Cookie:%020csrf=test HTTP/2 set this 
+                        * That's  it for token bypass : Guys make sure to understand more rather then solving labs by seeing solution ask questions and get the answer's form copolit,chatgpt,gemini,preplexity,etc
+
+
+
 
 
 
