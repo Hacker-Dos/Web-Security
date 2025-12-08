@@ -13,6 +13,31 @@ Cross-Site Request Forgery (CSRF) is an attack where a victim is tricked into pe
 2. **Cookie-based session** – The application relies solely on cookies to identify the user.
 3. **Predictable request** – No secret values required.
 
+
+   ┌───────────────┐              ┌───────────────┐
+   │   Victim's    │              │   Attacker's  │
+   │   Browser     │              │   Exploit     │
+   └──────┬────────┘              └──────┬────────┘
+          │                               │
+          │ 1. Victim visits attacker’s   │
+          │    malicious HTML page        │
+          │ <form auto-submits>           │
+          │──────────────────────────────>│
+          │                               │
+          │ 2. Browser sends forged       │
+          │    request with cookies       │
+          │──────────────────────────────>│
+   ┌──────┴────────┐              ┌───────────────┐
+   │ Target Web    │              │   CSRF Token  │
+   │ Application   │              │   Bypassed    │
+   └───────────────┘              └───────────────┘
+
+
+
+
+
+
+
 ## Practical Learning
 Try free labs at [PortSwigger](https://portswigger.net/web-security/csrf) to practice:
 
@@ -56,23 +81,104 @@ Try free labs at [PortSwigger](https://portswigger.net/web-security/csrf) to pra
 
 
 ## SameSite Cookies Bypass 
--Lab 7 :
+-SameSite is a browser security mechanism that determines when a website's cookies are included in requests origination from other websites.
+-SameSite cookie restrictions provide partial protection against a variety of cross-site attacks.
+-Strict If the cookie set with the SameSite=Strict attribute , browsers will not send it any cross-site requests
+- Lax SameSite restrictions means that browsers will send the cookie in cross-site requests, but only if conditions met
+    1. The request uses the GET method
+    2. The request resulted from a top-level navigation by the user, such as clicking on a link
+-None This effectively disable SameSite restrictions altogether, regardless of the browser This will send the cookie to requested site
+
+## Bypass the SameSite Lax restrictions using GET requests or method overide
+- Lab 7 : SameSite Lax bypass via method override :
+                1. Change request method: Instead of sending a POST, attacker sends a GET.
+                2. Hidden override field: Add _method=POST in the form.
+                3. Victim clicks link / loads page: Browser sends a GET request (cookies included, because SameSite=Lax allows it).
+                4. Server interprets as POST: The server sees _method=POST and processes it as if it were a real POST.
+                5. Result: The attacker bypasses SameSite=Lax restrictions and performs a CSRF-like action (e.g., changing the victim’s email).
+          -In the context the POST method is override by the GET
+
+-SameSite=Lax blocks cross-site POSTs, but attackers can bypass it by disguising a POST as a GET using method override. 
+-That’s why SameSite is only partial protection — developers must also implement CSRF tokens or other defenses.
+
+
+1.Client-side gadget : When a site has a gadget(like a redirect script or URL handler)that can be triggered from outside,
+                Because of that, cookies with SameSite=Lax or Samesite=Strict are still sent.
+
+2. Server-side redirects : When the server issues an HTTP 3XX redirect , the browser remembers that the original request came from a cross-site context.
+                  - Even though the redirect target is on the same site, the browser enforces SameSite rules and does not send restricted cookies.
+
+#### In short 
+-client-side gadget = loophole-->SameSite bypass possible
+-server-side redirect = chain tracked-->SameSite enforced
+
+-Lab 8 : SameSite Strict bypass via client-side redirect :
+
+1. Problem: Change email has no CSRF token.
+2. Defense bypass: SameSite=Strict is bypassed using a client-side redirect gadget.
+3. Exploit: Redirect gadget is abused to send a GET request to change the victim’s email.
+4. Outcome: Victim’s email is changed → CSRF attack succeeds.
+      - In this lab postid parameter is vulerable so we abuse this to make our email change.
+
+-Lab 9: SameSite Strict bypass via sibling domain
+
+1. Identify that the WebSocket handshake(GET /chat) has no CSRF tokens and is vulnerable to CSWSH.
+2. Confirm that sending "READY" returns the full chat history , but samesite=strict prevents cookies cross-site.
+3. Discover the sibling domain(cms=...) via Acess-Control-Allow-Origin and exploit its reflected XSS.
+4. Inject a URL-encoded CSWSH payload into the XSS vector so the browser initiates the WebSocket with Cookies.
+5. Exfiltrate the victim's chat history via Burp Collaborator, extract credentials , and log in to solve the lab.
+
+
+-Lab 10 : SameSite Lax bypass via cookie refresh
+
+SameSite lax basics
+
+    - Purpose: SameSite restricts when browsers send cookies in cross-site requests to help prevent CSRF.
+
+    - Modes:
+
+        - Strict: Cookies are sent only in same-site navigations.
+
+        - Lax: Cookies are sent on top-level cross-site navigations with “safe” methods (GET), but not on background requests or cross-site POST.
+
+        - None: Cookies are sent in all contexts but must be Secure over HTTPS.
+
+- Chrome’s temporary exception (the 2-minute window)
+
+    - Defaulting to Lax: Cookies without an explicit SameSite attribute are treated as SameSite=Lax.
+
+    - Lax + POST exception: Chrome grants a short, roughly 2-minute “grace period” right after a cookie is set or refreshed. 
+                            During this window, even a top-level cross-site POST will include that cookie. This is sometimes referred to as “Lax-allowing-unsafe.”
+
+    - Why it matters: Attackers can force a cookie “refresh” on the victim and then trigger a cross-site POST within the window, bypassing the normal Lax restriction and enabling CSRF.
+
+## Solvind the lab
+1. Log in via OAuth and capture the POST /my-account/change-email request (no CSRF token present).
+2. Note that session cookies are set with SameSite=Lax, but Chrome allows cross‑site POSTs for 2 minutes after refresh.
+3. Build a CSRF exploit form that submits a new email address to /my-account/change-email.
+4. Force a cookie refresh by opening /social-login, then delay and auto‑submit the CSRF form.
+5. Add a click handler to bypass popup blocking, then deliver the exploit with a malicious email value to the victim.
 
 
 
+# Referer-based validation Bypass
+-Lab 11 : CSRF where Referer validaiton depends on header being present
 
+1. Log in with wiener:peter and capture the POST /my-account/change-email request in Burp.
+2. Test in Repeater: changing the Referer domain rejects the request, but deleting the header makes it succeed.
+3. Build a CSRF exploit form that submits a new email address to /my-account/change-email.
+4. Add <meta name="referrer" content="no-referrer"> in the HTML so the browser omits the Referer header.
+5. Host the exploit on the server, set the email to a different value, and deliver it to the victim.
 
+- Here this meta tag is removing the referrer header form the request
 
+Lab 12 : CSRF with broken Referer validation 
 
-
-
-
-
-
-
-
-
-
+1. Log in and capture the change email request in Burp.
+2. Test the Referer header — notice it’s rejected if the domain is wrong.
+3. Bypass by appending the lab domain in the query string of the Referer (e.g. ?YOUR-LAB-ID.web-security-academy.net).
+4. Build a CSRF exploit page with history.pushState() adding that query string, and set <meta name="referrer" content="unsafe-url">.
+5. Host the exploit, change the email to a new value, and deliver it to the victim to solve the lab.
 
 
 ## common defences against CSRF
@@ -87,6 +193,14 @@ Try free labs at [PortSwigger](https://portswigger.net/web-security/csrf) to pra
 - key point some times the application will hold a large bucket of valid tokens if the session id is not tied with the crsf token we can we can manipulate the request.
 
   
+
+
+████████╗██╗  ██╗ █████╗ ███╗   ██╗██╗  ██╗     ██╗   ██╗
+╚══██╔══╝██║  ██║██╔══██╗████╗  ██║██║ ██╔╝     ██║   ██║
+   ██║   ███████║███████║██╔██╗ ██║█████╔╝      ██║   ██║
+   ██║   ██╔══██║██╔══██║██║╚██╗██║██╔═██╗      ██║   ██║
+   ██║   ██║  ██║██║  ██║██║ ╚████║██║  ██╗     ╚██████╔╝
+   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝  ╚═╝      ╚═════╝  
 
   
 
