@@ -1,0 +1,56 @@
+                                  ###  OPEN_REDIRECTION 
+
+
+        ┌────────────────┐                 ┌───────────────────┐
+        │   Victim's     │                 │  Attacker's Site  │
+        │    Browser     │                 └───────┬───────────┘
+        └───────┬────────┘                         │
+                │ 1. Victim clicks attacker’s       │
+                │    crafted link:                  │
+                │                                    │
+                │  https://trusted.com/redirect?    │
+                │      url=http://evil.com/login    │
+                │───────────────────────────────────>│
+                │                                    │
+        ┌──────────────┴──────────┐        ┌────────┴─────────┐
+        │  Trusted Web Application │        │  Attacker's Fake  │
+        │ (vulnerable redirect)   │        │     Destination    │
+        └──────────────┬──────────┘        └───────────────────┘
+                       │
+                       │ 2. Server performs redirect
+                       │    without validation
+                       │───────────────────────────────────────>
+                       │
+        ┌──────────────┴──────────┐
+        │   Victim ends up on     │
+        │  malicious site (phish, │
+        │   malware, credential   │
+        │         theft)          │
+        └──────────────────────────┘
+
+
+# What are open URL redirect Vulnerabilities ?
+- It arise when a vulnearble web application processes your user input in an unsafe way allowing 
+  you to redirect users from the trusted host to an external(untrusted) location.
+
+- 2 types of redirects 
+     1. Server-side redirects (the most common ones)
+     2. Client-side redirects (also referred to as Dom-based redirects)
+
+
+Note : Guys don't go for automated commands avaliable on the online they does not work on the bug bounty program.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
