@@ -1,1 +1,23 @@
+                      Business logic Vulnerabilities
+
+# Business logic vulnerabilites are flaws in how application's rules and workflows are designed allowing attackers to misuse legitimate functionlaity for malicious purposes.
+
+# what are Business logic vulnerabilites ?
+- Defination : Errors in the application's logic that let attackers bypass intended workflows or constraints
+- Nature : The don't exploit coding bus like sql injeciton ; instead , they exploit how the system is supposed to work
+- Other names : Application logic flaws or simply logic flaws
+
+# How they Arise >
+- Flawed assumptions
+- Weak validation
+- Complex systems
+- Poor documentaion
+
+
+# Impact 
+- Authentication flaws
+- Financial manipulation
+- Business disruption
+- Broad severity range
+
 
