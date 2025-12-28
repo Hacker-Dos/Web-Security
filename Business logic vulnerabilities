@@ -21,3 +21,21 @@
 - Broad severity range
 
 
+# Excessive trust in client-side controls
+
+1. Excessive trust in client-side controls
+  - solution : capture the  Post /cart request at the end price parameter is there try to manipulate it and set price to less than given credit
+
+2. 2FA broken logic 
+  - solution : log in with give creds capture the traffic  notice that POST /login2 request has the verify parameter  remove the session  in verify parameter change it ot carlos  send the GET /login to get the carlos a mfa code  after sending the code go to the post request make the bruteforce the mfa code get the session id in response and login 
+
+
+# Failing to handle unconventional input
+
+1. High-level logic vulnerability
+     - solution : In the POST /cart  at the end the quantity parameter is there  make it to negative value (-2,-3) buy the leather jacket
+
+2. Low-level logic flaw
+  -solution : Making interget overflow here get the  POST /cart request in the last quantity parameter  make it to 99 and give null payloads and continue indefinitely option check the value is getting negative and make calculation based on that add other items to manage and done
+
+
