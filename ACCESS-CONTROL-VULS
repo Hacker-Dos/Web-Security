@@ -1,1 +1,126 @@
+     ### Access control vulnerabilties and privilege escalation
+
+1. Access control : In the context of web application , access control is dependent on authentication and session management.
+  -Authentication : confirms that the user is who they say they are.
+  -Session Management : Iddentifies which subsequent HTTP requests are being made by that same user.
+  -Access Control : determines whether the user is allowed to carry out the action that they are attempting to perform
+
+2. Access control security models :
+      - Programmatic access control
+      - Discretionary access control(DAC)
+      - Mandatory access control(MAC)
+      - Role-based access control(RBAC)
+
+# 3 Types of Access Controls
+    1.Vertical access control
+    2.Horizontal access control
+    3.Context-dependent access control
+
+# Vertical Privilege escalation 
+- so in this a user can access the admin functionalities by visiting admin path  or checking robots.txt
+
+# Labs 
+-Type 1 {Unprotected functionality}
+
+1. Unprotected admin Functionality :
+ - solution : To solve this lab just /robots.txt there is admin path put that path in the browser delete the carlos.
+
+2. Unprotected admin Functionality with unpredictable URL:
+  -solution : TO solve this lab check the source code of the every page and find the admin page.
+
+-Type 2 {Parameter-based access control methods}
+   # some applications determine the user's acccess rights or role at login , and then store this information in a user-controllable location.
+      1. A hidden field
+      2. A cookie
+      3. A preset query string parameter
+
+  1. User role controlled by request parameter 
+    - solution : login with the given credentials and in home page intercept the request in burp and in cookie parameter admin:false make it to true copy the original browser session open it in the browser and in browser there is cookies tab change the same thing delete user.
+
+  2. User role can be modified in user profile    
+      - solution : login with the given credentials and try to change email observer the request and response clearly and their try to add parameter roleid : 2 send it copy the session to browser and then their is admin functionality in the home page delete the user.
+
+-Type 3 {Broken access control resulting from platform misconfiguration}
+      1.URL-based access control can be circumvented
+        -solution : try to add the  "{X-Original-URL :}" in the request and path does not exist and if u found that the  404 reponse and the its a good sign now try access the admin url via this header if u get 200 ola ! check the response and then delete the user 
+
+      2. Method-based access control can be circumvented
+          - solution : log in to admin account see the path admin-roles? change the post method to get method change username=wiener and put the session token of winer in place of the admin token.
+
+
+
+# Horizontal privilege escalation
+ - Gaining the access to another user and access the resources.
+
+# Labs
+
+1. User ID controlled by request parameter
+ -solution : change the id = carlos check the response we will find the apikey submit
+
+2.User ID controlled by request parameter, with unpredictable user IDs
+ -solution : check the blog post by carlos check the response u will find the uid submit it and find apikey in response submit it.
+
+3.User ID controlled by request parameter with data leakage in redirect
+ - solution : change the id = carlos done!
+
+
+# Horizontal to vertical privilege esclation
+
+1.User ID controlled by request  parameter with passoword disclosure
+  - solution : To solve this lab see the url id = change it to administrator and then inscept password to text and login as admin and finally delete carlos.
+
+
+# Insecure direct object references
+  - This are sub category of access control vulnerabilites
+ -solution : In the request 2.txt is download in request change it to 1.txt see the 1.txt password will found log it .
+
+
+# Access control vulnerabilites in multi-step processes
+
+1. Multi-step process with no access control on one step
+  -solution : we have to capture two requests /admin-roles first request change name to wiener and send then in next request change name and put session id of user wiener instead of admin and send 
+
+# Referer-based access control
+
+1.Referer-based access control
+ -solution : log into admin account capture the user upgrade request and add wiener session id and change name to wiener check referer header is there and send the request
+
+
+
+# Prevent access control vulnerabilites
+- never rely on obfuscation alone for access control
+- unless a resource is intended to be publicly accessible , deny access by defualt
+- use a single application-wide mechanism for enforcing access controls
+- At code level, make it mandatory for devs to declare the access that is allowed for each resource and deny access by default
+- Audit and test access controls to ensure they work as designed.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
