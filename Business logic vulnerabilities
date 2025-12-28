@@ -36,6 +36,42 @@
      - solution : In the POST /cart  at the end the quantity parameter is there  make it to negative value (-2,-3) buy the leather jacket
 
 2. Low-level logic flaw
-  -solution : Making interget overflow here get the  POST /cart request in the last quantity parameter  make it to 99 and give null payloads and continue indefinitely option check the value is getting negative and make calculation based on that add other items to manage and done
+  - solution : Making interget overflow here get the  POST /cart request in the last quantity parameter  make it to 99 and give null payloads and continue indefinitely option check the value is getting negative and make calculation based on that add other items to manage and done
+
+3. Inconsistent handling of exceptional input
+  - solution :  After 255 characters they will get truncated the excat mail i used this is the payload(AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADontWannaCry.com@exploit-0a7200e204f51e738095c6f401b70005.exploit-server.net)
+
+# Making flawed assumptions about user behavior
+
+ -Tusted users won't always remian trustworthy
+  
+1.Inconsistent security controls
+ -solution : create an account with the mail given in exploit email server confirm registration Now create now there is email update functionality update the email with something@dontwannacry.com delete the carlos solved
+
+
+# User won't always supply mandatory input
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
