@@ -51,6 +51,14 @@
 
 # User won't always supply mandatory input
 
+1. Weak isolation on dual-use endpoint
+ -solution : In this lab capture the POST /my-account/change-password request then try to remove the current-password parameter and see if password is getting changed then change username to administrator and then password to test done login and delete carlos
+
+2. Password reset boken logic
+  -soltuion : click on the forgot password and then send it email click email link and update the new password then we will get the  POST /forgot-password?tem- request at the end try to change the name of the user in the parameter done show response in browser and login in with update based and carlos account
+
+
+
 
 
 
