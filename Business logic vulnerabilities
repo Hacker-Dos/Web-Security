@@ -58,6 +58,46 @@
   -soltuion : click on the forgot password and then send it email click email link and update the new password then we will get the  POST /forgot-password?tem- request at the end try to change the name of the user in the parameter done show response in browser and login in with update based and carlos account
 
 
+# User won't always follow the intended sequence
+
+1. 2FA simple bypass
+  -solution : Enter the credentials of victim intercept it send the and then GET /login2 request is there drop that request and in the url change it /my-account in the path and now off the intercept check the browser
+
+2. Insuffcient workflow validation 
+  -solution : first purchase the item with suffcient funds see the request GET /cart/order-confirmation then go to cart and add the leather jacker to cart and make the same GET request check in the browser
+
+3. Authentication bypass via flawed state machine
+  -solution : login with the given credentials send the request with credentials and drop the role-selector request in the browser remove the role-selector and finally reload the browser the admin panel will be there delete carlos
+
+
+# Domain-specific flaws 
+
+  1. Flawed enforcement of business rules
+      -solution : In the home page at the end there is sign up to newletter so in that add dummy mail to get new coupen code then use both coupen code alternative to get discount until we buy the leather jacket
+
+  2. Infinite money logic flaw
+    -solution :   - Sign up for the newsletter to get coupon SIGNUP30, buy a $10 gift card, apply the 30% discount, and copy the generated code.
+                  - Redeem the gift card via POST /gift-card with the code, adding $3 store credit.
+                  - In Burp, create a Session handling rule with a macro: POST /cart → POST /cart/coupon → POST /cart/checkout → GET /cart/order-confirmation → POST /gift-card.
+                  - Configure the macro so the gift-card parameter in POST /gift-card is derived from the order-confirmation response.
+                  - Launch a Burp Intruder Sniper attack on /my-account with 412 null payloads, single-threaded, to accumulate enough credit to buy the jacket.
+
+# Providing an encryption oracle
+
+1. Authentication bypass via encryption oracle
+ - solution : kindly follow the solution by the community provided
+
+
+# Email address parser discrepancies
+
+1. Bypassing access controls using email address parsing discrepancies
+ - solution : {=?utf-7?q?admin&AEA-exploit-0a8b0095034bdd4680844dc301f100b6.exploit-server.net&ACA-?=@ginandjuice.shop} replace the email server domain and register and confirm the registration and delete the carlos
+
+
+
+
+
+
 
 
 
