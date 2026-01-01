@@ -1,1 +1,37 @@
+                          File upload vulnerabilites
+
+# File upload vulnerabilites are when a web server allows users to uplaod files to its fle system without 
+ -suffficiently validating things like thier name , type , contents , or size.
+
+### Impact of File upload vulnerabilites 
+- Depends on two key factors
+1. which aspect of the file the website fails to validate properly ,whether that be its size , type contents, and so on.
+2. what restrictions are imposed on the file once it has been successfully uploaded.
+
+
+# Exploiting unrestricted file uploads to deploy a web shell
+
+1. Remote code execution via web shell upload
+ - solution : upload a payload <?php echo file_get_contents('/home/carlos/secret'); ?>  get the secret code and sumbit it
+
+
+# Exploiting flawed validation of file uploads
+ - Flawed file type validation 
+
+1. Web shell upload via Content-Type restriction bypass
+ -solution : upload the exploit.php in the body change the content-type header to image/jpeg done
+
+
+# Preventing file execution in user-accessible directories
+
+1. Web shell upload via path traversal 
+  -solution : upload exploit.php in the request body filename="..%2exploit.php" in the POST /my-account/avatar request and then GET /files/avatars/../exploit.php get the secret code and submit
+
+# Insufficient blacklisting of dangerous file types
+ - Overriding the server configuration 
+
+1. Web shell upload via extension blacklist bypass
+
+
+
 
